@@ -84,6 +84,7 @@
     r2modman
     remmina
     sameboy
+#     slippi-netplay
     smplayer
     svp
     vlc
