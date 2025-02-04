@@ -64,7 +64,7 @@
     kdePackages.konversation
 #     kodi
     libreoffice-qt6-fresh
-    lutris
+#     lutris
     mangohud
     mediainfo
     mesa-demos
@@ -92,9 +92,7 @@
     zapzap
     zoom-us
 
-    snes9x-gtk
-
-    pkgs-unstable.umu-launcher
+#     pkgs-unstable.umu-launcher
 #     pkgs-unstable.lutris
 
   ];

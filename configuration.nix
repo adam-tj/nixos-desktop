@@ -13,6 +13,9 @@
       ./flatpak.nix
     ];
 
+    # Bluetooth
+    hardware.bluetooth.enable = true;
+    hardware.bluetooth.powerOnBoot = false;
 
     # Flatpak
     services.flatpak.enable = true;
@@ -30,20 +33,32 @@
     "gcadapter_oc"
    ];
 
+    # Filesystems
+    fileSystems = {
+      "/".options = [ "compress=zstd" "noatime" ];
+      "/home".options = [ "compress=zstd" "noatime" ];
+    };
+
+    services.btrfs.autoScrub = {
+      enable = true;
+      interval = "weekly";
+      fileSystems = [ "/" "/home" ];
+    };
+
+
     # Bootloader.
     boot.kernelPackages = pkgs.linuxPackages_6_12;
 #   boot.loader.systemd-boot.enable = true;
 #   boot.loader.efi.canTouchEfiVariables = true;
 
   boot = {
-
     plymouth = {
       enable = true;
-      theme = "colorful_loop";
+      theme = "spinner_alt";
       themePackages = with pkgs; [
         # By default we would install all themes
         (adi1090x-plymouth-themes.override {
-          selected_themes = [ "colorful_loop" ];
+          selected_themes = [ "spinner_alt" ];
         })
       ];
     };
@@ -181,6 +196,9 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
 
+  # Overlay?
+#   nixpkgs.overlays = [ nixgl.overlay ];
+
   environment.systemPackages = with pkgs; [
     btop
     distrobox
@@ -189,20 +207,20 @@
     git
     gnugrep
     htop
-    killall
     kdePackages.partitionmanager
+    killall
     mlocate
+#   nixgl.auto.nixGLDefault
+    linuxPackages.nvidia_x11
     ocl-icd
     opencl-headers
 #     openrgb-with-all-plugins
     pciutils
+    rar
     usbutils
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    wget
-    rar
-    linuxPackages.nvidia_x11
-#     umu-launcher
     vulkan-tools
+    wget
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -214,7 +232,6 @@
   # };
 
   # List services that you want to enable:
-
   services.locate.enable = true;
   services.locate.package = pkgs.mlocate;
 
@@ -255,8 +272,6 @@
   services.xserver.videoDrivers = ["nvidia"];
 
   hardware.nvidia = {
-
-  # Modesetting is required
   modesetting.enable = true;
   powerManagement.enable = true;
   powerManagement.finegrained = false;
